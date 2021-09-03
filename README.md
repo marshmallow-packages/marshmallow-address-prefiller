@@ -5,6 +5,7 @@
 # Nova Translatable
 
 [![Version](https://img.shields.io/packagist/v/marshmallow/address-prefiller)](https://github.com/marshmallow-packages/address-prefiller)
+[![Downloads](https://shields.io/packagist/dt/marshmallow/address-prefiller)](https://github.com/marshmallow-packages/address-prefiller)
 [![Issues](https://img.shields.io/github/issues/marshmallow-packages/address-prefiller)](https://github.com/marshmallow-packages/address-prefiller)
 [![Licence](https://img.shields.io/github/license/marshmallow-packages/address-prefiller)](https://github.com/marshmallow-packages/address-prefiller)
 
