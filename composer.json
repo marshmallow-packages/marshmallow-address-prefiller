@@ -1,5 +1,5 @@
 {
-    "name": "marshmallow/zipcode",
+    "name": "marshmallow/address-prefiller",
     "description": "This package will get the full address information based on the zipcode and house number. Currently online dutch addresses are supported.",
     "keywords": [
         "address",
