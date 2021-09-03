@@ -1,0 +1,35 @@
+{
+    "name": "marshmallow/zipcode",
+    "description": "This package will get the full address information based on the zipcode and house number. Currently online dutch addresses are supported.",
+    "keywords": [
+        "address",
+        "zipcode",
+        "postcode",
+        "laravel",
+        "geodata.nationaalgeoregister.nl",
+        "locatieserver",
+        "geodata",
+        "nationaalgeoregister"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Marshmallow\\Zipcode\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Marshmallow\\Zipcode\\FieldServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
