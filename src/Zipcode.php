@@ -8,17 +8,17 @@ use Illuminate\Support\Facades\Http;
 
 class Zipcode
 {
-    protected $street;
+    protected $street = 'street';
 
-    protected $city;
+    protected $city = 'city';
 
-    protected $province;
+    protected $province = 'province';
 
-    protected $country;
+    protected $country = 'country';
 
-    protected $latitude;
+    protected $latitude = 'latitude';
 
-    protected $longitude;
+    protected $longitude = 'longitude';
 
     public function get(string $zip_code, string $house_number)
     {
