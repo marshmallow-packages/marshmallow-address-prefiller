@@ -116,8 +116,8 @@ class Zipcode extends Field
         $value = explode(',', $value);
 
         $request->merge([
-            $this->attribute => $value[0],
-            $this->attribute_2 => $value[1],
+            $this->attribute => $value[0] ?? null,
+            $this->attribute_2 => $value[1] ?? null,
         ]);
 
         if ($request->exists($this->attribute)) {
