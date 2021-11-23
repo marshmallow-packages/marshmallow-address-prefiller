@@ -71,6 +71,7 @@ class Zipcode
 
     protected function callGeoDataApi(string $zip_code, string $house_number)
     {
+        $zip_code = str_replace(' ', '', $zip_code);
         return Http::get(
             "https://geodata.nationaalgeoregister.nl/locatieserver/free?fq=postcode:{$zip_code}&fq=huisnummer:{$house_number}"
         )->json();
