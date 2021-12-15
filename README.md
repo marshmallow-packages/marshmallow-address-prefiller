@@ -38,38 +38,34 @@ public function fields(Request $request)
 protected function addressFields()
 {
     return $this->merge([
-
-        /**
-         * @param [string] $name The name of the zipcode field
-         * @param [string] $attribute The column name of the zipcode field
-         * @param [string] $name_2 The name of your housenumber field
-         * @param [string] $attribute_2 The column name of the house number field
-         */
-        Zipcode::make(__('Zipcode'), 'column_1', __('Housenumber'), 'column_11')
-
+        Zipcode::make(__('Zipcode prefiller'), __('Zipcode'), __('Housenumber'))
             /**
              * Let the package know which columns are connected to
              * the fields. The default values are commented after each
              * function call. Is your column names match these defaults,
              * you don't need to call all these functions.
              */
-            ->street('column_2')        // street
-            ->city('column_3')          // city
-            ->province('column_4')      // province
-            ->country('column_7')       // country
-            ->latitude('column_8')      // latitude
-            ->longitude('column_9'),    // longitude
+            ->zipcode('zipcode')
+            ->housenumber('address_2')
+            ->street('address_1')
+            ->city('city')
+            ->province('province')
+            ->country('country')
+            ->latitude('latitude')
+            ->longitude('longitude'),
 
         /**
          * The field below will all be prefilled with the collected
          * data if we find a match on the submitted zipcode and housenumber.
          */
-        Text::make('Street', 'column_2')->hideFromIndex(),
-        Text::make('City', 'column_3')->hideFromIndex(),
-        Text::make('Province', 'column_4')->hideFromIndex(),
-        Country::make('Country', 'column_7')->hideFromIndex(),
-        Text::make('Latitude', 'column_8')->hideFromIndex(),
-        Text::make('Longitude', 'column_9')->hideFromIndex(),
+        Hidden::make(__('Zipcode'), 'zipcode')->hideFromIndex(),
+        Hidden::make(__('Housenumber'), 'address_2')->hideFromIndex(),
+        Text::make(__('Street'), 'address_1')->hideFromIndex(),
+        Text::make(__('City'), 'city')->hideFromIndex(),
+        Text::make(__('Province'), 'province')->hideFromIndex(),
+        Country::make(__('Country'), 'country')->hideFromIndex(),
+        Text::make(__('Latitude'), 'latitude')->hideFromIndex(),
+        Text::make(__('Longitude'), 'longitude')->hideFromIndex(),
     ]);
 }
 ```

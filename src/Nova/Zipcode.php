@@ -2,7 +2,6 @@
 
 namespace Marshmallow\Zipcode\Nova;
 
-use Closure;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -16,41 +15,27 @@ class Zipcode extends Field
      */
     public $component = 'zipcode';
 
-    /**
-     * Create a new field.
-     *
-     * @param  string  $name
-     * @param  string|callable|null  $attribute
-     * @param  callable|null  $resolveCallback
-     * @return void
-     */
-    public function __construct($name, $attribute = null, $name_2, $attribute_2 = null, $field_connections = [], callable $resolveCallback = null)
+    public function __construct($name, $zipcode_placeholder, $house_number_placeholder, $field_connections = [], callable $resolveCallback = null)
     {
         $this->name = $name;
-        $this->name_2 = $name_2;
-        $this->attribute_2 = $attribute_2 ?? str_replace(' ', '_', Str::lower($name_2));
+        $this->zipcode_placeholder = $zipcode_placeholder;
+        $this->house_number_placeholder = $house_number_placeholder;
         $this->resolveCallback = $resolveCallback;
 
         $this->default(null);
 
         $this->withMeta([
-            'name_2' => $name_2,
-            'attribute_2' => $attribute_2 ?? str_replace(' ', '_', Str::lower($name_2)),
+            'zipcode_placeholder' => $zipcode_placeholder,
+            'house_number_placeholder' => $house_number_placeholder,
             'field_connections' => $field_connections,
+            'zipcode_error' => __('The zipcode field should have a format of 1234AA'),
+            'housenumber_error' => __('Please provide a house number'),
         ]);
-
-        if (
-            $attribute instanceof Closure ||
-            (is_callable($attribute) && is_object($attribute))
-        ) {
-            $this->computedCallback = $attribute;
-            $this->attribute = 'ComputedField';
-        } else {
-            $this->attribute = $attribute ?? str_replace(' ', '_', Str::lower($name));
-        }
 
         $this->street('street')
             ->city('city')
+            ->zipcode('zipcode')
+            ->housenumber('housenumber')
             ->province('province')
             ->country('country')
             ->latitude('latitude')
@@ -72,6 +57,16 @@ class Zipcode extends Field
         return $this->withMeta(['province' => $field]);
     }
 
+    public function zipcode($field)
+    {
+        return $this->withMeta(['zipcode' => $field]);
+    }
+
+    public function housenumber($field)
+    {
+        return $this->withMeta(['housenumber' => $field]);
+    }
+
     public function country($field)
     {
         return $this->withMeta(['country' => $field]);
@@ -89,10 +84,19 @@ class Zipcode extends Field
 
     protected function resolveAttribute($resource, $attribute)
     {
-        $street = data_get($resource, str_replace('->', '.', $attribute));
-        $number = data_get($resource, str_replace('->', '.', $this->attribute_2));
+        $zipcode = $this->meta()['zipcode'];
+        $housenumber = $this->meta()['housenumber'];
+
+        if (is_array($resource)) {
+            return [
+                $resource[$zipcode],
+                $resource[$housenumber],
+            ];
+        }
+
         return [
-            $street, $number
+            $resource->{$zipcode},
+            $resource->{$housenumber},
         ];
     }
 
@@ -111,20 +115,6 @@ class Zipcode extends Field
         $model,
         $attribute
     ) {
-
-        $value = $request->{$this->attribute};
-        $value = explode(',', $value);
-
-        $request->merge([
-            $this->attribute => $value[0] ?? null,
-            $this->attribute_2 => $value[1] ?? null,
-        ]);
-
-        if ($request->exists($this->attribute)) {
-            $model->{$this->attribute} = $request[$this->attribute];
-        }
-        if ($request->exists($this->attribute_2)) {
-            $model->{$this->attribute_2} = $request[$this->attribute_2];
-        }
+        $request->except($this->attribute);
     }
 }

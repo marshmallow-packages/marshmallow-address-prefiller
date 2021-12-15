@@ -20,6 +20,8 @@ class Zipcode
 
     protected $longitude = 'longitude';
 
+    protected $flexible_id_prefix = null;
+
     public function get(string $zip_code, string $house_number)
     {
         $response_array = $this->callGeoDataApi($zip_code, $house_number);
@@ -72,44 +74,64 @@ class Zipcode
     protected function callGeoDataApi(string $zip_code, string $house_number)
     {
         $zip_code = str_replace(' ', '', $zip_code);
-        return Http::get(
+        $response = Http::get(
             "https://geodata.nationaalgeoregister.nl/locatieserver/free?fq=postcode:{$zip_code}&fq=huisnummer:{$house_number}"
-        )->json();
+        );
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        throw new Exception(__('The National Geo Register is down at the moment.'), 2);
+    }
+
+    public function flexibleIdPrefix(string $flexible_id_prefix = null): self
+    {
+        $this->flexible_id_prefix = ($flexible_id_prefix !== 'null') ? $flexible_id_prefix : null;
+        return $this;
     }
 
     public function street($field)
     {
-        $this->street = $field;
+        $this->street = $this->buildFieldName($field);
         return $this;
     }
 
     public function city($field)
     {
-        $this->city = $field;
+        $this->city = $this->buildFieldName($field);
         return $this;
     }
 
     public function province($field)
     {
-        $this->province = $field;
+        $this->province = $this->buildFieldName($field);
         return $this;
     }
 
     public function country($field)
     {
-        $this->country = $field;
+        $this->country = $this->buildFieldName($field);
         return $this;
     }
 
     public function latitude($field)
     {
-        $this->latitude = $field;
+        $this->latitude = $this->buildFieldName($field);
         return $this;
     }
 
     public function longitude($field)
     {
-        $this->longitude = $field;
+        $this->longitude = $this->buildFieldName($field);
         return $this;
+    }
+
+    protected function buildFieldName(string $field_name): string
+    {
+        if ($this->flexible_id_prefix !== null) {
+            return "{$this->flexible_id_prefix}__{$field_name}";
+        }
+        return $field_name;
     }
 }
