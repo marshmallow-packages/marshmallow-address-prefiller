@@ -89,8 +89,8 @@ class Zipcode extends Field
 
         if (is_array($resource)) {
             return [
-                $resource[$zipcode],
-                $resource[$housenumber],
+                (isset($resource[$zipcode])) ? $resource[$zipcode] : null,
+                (isset($resource[$housenumber])) ? $resource[$housenumber] : null,
             ];
         }
 
