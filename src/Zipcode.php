@@ -22,7 +22,7 @@ class Zipcode
 
     protected $flexible_id_prefix = null;
 
-    public function get(string $zip_code, string $house_number)
+    public function get(string $zip_code, string $house_number = null)
     {
         $response_array = $this->callGeoDataApi($zip_code, $house_number);
         $this->validateApiResponse($response_array);
@@ -71,10 +71,13 @@ class Zipcode
         }
     }
 
-    protected function callGeoDataApi(string $zip_code, string $house_number)
+    protected function callGeoDataApi(string $zip_code, string $house_number = null)
     {
         $zip_code = str_replace(' ', '', $zip_code);
-        $url = "https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?fq=postcode:{$zip_code}&fq=huisnummer:{$house_number}";
+        $url = "https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?fq=postcode:{$zip_code}";
+        if ($house_number) {
+            $url .= "&fq=huisnummer:{$house_number}";
+        }
         $response = Http::get($url);
 
         if ($response->successful()) {
